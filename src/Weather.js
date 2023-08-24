@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import FormattedDate from "./FormattedDate";
 import axios from "axios";
 import "./Weather.css";
 
@@ -14,7 +15,7 @@ export default function Weather(props) {
       wind: response.data.wind.speed,
       img: response.data.condition.icon_url,
       icon: response.data.condition.icon,
-      date: "Wednesday 07:00",
+      date: new Date(response.data.time * 1000),
     });
   }
 
@@ -42,7 +43,9 @@ export default function Weather(props) {
         </form>
         <h1>{weatherData.city}</h1>
         <ul>
-          <li>{weatherData.date}</li>
+          <li>
+            <FormattedDate date={weatherData.date} />
+          </li>
           <li className="text-capitalize">{weatherData.description}</li>
         </ul>
         <div className="row mt-3">
@@ -57,7 +60,7 @@ export default function Weather(props) {
                 <span className="temperature">
                   {Math.round(weatherData.temperature)}
                 </span>
-                <span className="unit">°C</span>
+                <span className="unit">°F</span>
               </span>
             </div>
           </div>
@@ -72,7 +75,7 @@ export default function Weather(props) {
     );
   } else {
     const apiKey = "4f86aea83o0bad32b69a00tb6fb3bd19";
-    let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${props.defaultCity}&key=${apiKey}&units=metric`;
+    let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${props.defaultCity}&key=${apiKey}&units=imperial`;
     axios.get(apiUrl).then(handleResponse);
     return "Loading...";
   }
